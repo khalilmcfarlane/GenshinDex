@@ -7,20 +7,6 @@ class GenshinApi {
         return this.#url;
     }
 
-    async testAllChar() {
-        // This is how function should be, need to also add image though.
-        try {
-            const response = await fetch(`https://genshin.jmp.blue/characters/all?lang=en`);
-            const data = await response.json();
-            // add a sort for obj.name
-            data.sort((a, b) => a.name.localeCompare(b.name));
-            return data;
-        } catch(error) {
-            document.getElementById('allCharacters').textContent = 'Error fetching character data';
-            console.error(error);
-        }
-    }
-
     async getAllCharacters() {
         try {
             const response = await fetch(`https://genshin.jmp.blue/characters/all?lang=en`);
@@ -60,14 +46,16 @@ class GenshinApi {
             let image = await this.loadCharacterIcon(char.id);
             if (image != null) {
             return `
+                <a href="/characters/${encodeURIComponent(char.name)}" style="text-decoration: none; color: inherit;" >
                 <div>
                     <h1> ${char.name}  </h1>
-                    <img src="${image}" alt="${char.name} icon"/>
+                    <img id="${char.name}-icon" src="${image}" alt="${char.name} icon"/>
                     <h3> ${char.nation} </h3>
                     <h3> ${char.rarity} </h3>
                     <h3> ${char.vision} </h3>
                     <h3> ${char.weapon} </h3>
                 </div>
+                </a>
                 <br>
                 `;
             }
@@ -80,6 +68,7 @@ class GenshinApi {
 
     async getCharacterbyName(name) {
         try {
+            name = name.toLowerCase();
             const response = await fetch(`https://genshin.jmp.blue/characters/${name}?lang=en`);
             const data = response.json();
             return this.showCharacter(data); 
@@ -150,8 +139,10 @@ const genshinApi = new GenshinApi();
 //document.addEventListener("DOMContentLoaded", genshinApi.getAllCharacters());
 if (typeof module === 'object') {
     module.exports = {
-        testAllChar: genshinApi.testAllChar.bind(genshinApi),
-        getCharacterbyName: genshinApi.getCharacterbyName.bind(genshinApi)
+        getAllCharacters: genshinApi.getAllCharacters.bind(genshinApi),
+        showAllCharacters: genshinApi.showAllCharacters.bind(genshinApi),
+        getCharacterbyName: genshinApi.getCharacterbyName.bind(genshinApi),
+        loadCharacterIcon: genshinApi.loadCharacterIcon.bind(genshinApi),
     }
 }
 /*

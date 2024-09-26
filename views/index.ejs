@@ -8,19 +8,13 @@
     </head>
     <body>
         <div id="allCharacters">
-              <!-- Loop through the characters passed from index.js and render their details -->
-            <% allCharacters.forEach(char => { %>
-                <div class="character-card">
-                        <h1><%= char.name %></h1>
-                        <!--<img src="${image}" alt="${char.name} icon"/> -->
-                        <h3><%= char.nation %> </h3>
-                        <h3><%= char.rarity %></h3>
-                        <h3><%= char.vision %></h3>
-                        <h3><%= char.weapon %></h3>
-                    <br>
-                </div>
-      <% }) %>
+           
         </div>
         <script src="/js/genshin.js" type="text/javascript"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+               genshinApi.getAllCharacters();
+            });
+        </script>
     </body>
 </html>

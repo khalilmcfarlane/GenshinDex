@@ -7,8 +7,14 @@
     </head>
     <body>
         <div id="character">
-            <h1><%= characterDetails %></h1>
+            <h1><%= name %></h1>
+            <div id="characterInfo"></div>
         </div>
         <script src="/js/genshin.js" type="text/javascript"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                genshinApi.getCharacterByName("<%=name%>");
+            })
+        </script>
     </body>
 </html>
