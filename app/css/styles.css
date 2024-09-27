@@ -1,6 +1,27 @@
-/*
-#allCharacters {
-
-    background-color:bisque;
+#bootstrap-override {
+    background-color: #282b30;
+    color: white;
 }
-*/ 
+
+div#allCharacters {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid black;
+}
+div#character {
+    text-align: center;
+}
+
+img.character-card {
+    max-width: fit-content;
+    height: 900px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+/*
+    Eventually, add css to to highlight image of character on hover
+*/

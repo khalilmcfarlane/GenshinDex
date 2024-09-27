@@ -39,23 +39,18 @@ class GenshinApi {
 
     async showAllCharacters(results) {
         const allCharacters = document.getElementById("allCharacters");
-        // TODO: add this to name header once I add html <h1><a href=“../public/character.hmtl”></a></h1>
-        // TODO: add event lister onmouseover shake div
-
         const charMap = await Promise.all(results.map(async (char) => {
             let image = await this.loadCharacterIcon(char.id);
             if (image != null) {
             return `
-                <a href="/characters/${encodeURIComponent(char.name)}" style="text-decoration: none; color: inherit;" >
                 <div>
                     <h1> ${char.name}  </h1>
-                    <img id="${char.name}-icon" src="${image}" alt="${char.name} icon"/>
+                    <a href="/characters/${encodeURIComponent(char.name)}" style="text-decoration: none; color: inherit;" >
+                    <img class="character-icon" src="${image}" alt="${char.name} icon"/>
+                    </a>
                     <h3> ${char.nation} </h3>
-                    <h3> ${char.rarity} </h3>
-                    <h3> ${char.vision} </h3>
-                    <h3> ${char.weapon} </h3>
+                    <h3> ${char.rarity}-star ${char.vision} ${char.weapon} </h3>
                 </div>
-                </a>
                 <br>
                 `;
             }
@@ -66,11 +61,13 @@ class GenshinApi {
 
     }
 
-    async getCharacterbyName(name) {
+    async getCharacterByName(name) {
         try {
-            name = name.toLowerCase();
-            const response = await fetch(`https://genshin.jmp.blue/characters/${name}?lang=en`);
-            const data = response.json();
+            // need to handle when name is two words (ex: hu tao)
+            // Misses some chars like Ayaka, Kazuha, etc.
+            let noSpaceName = name.replace(" " , "-");
+            const response = await fetch(`https://genshin.jmp.blue/characters/${noSpaceName}?lang=en`);
+            const data = await response.json();
             return this.showCharacter(data); 
 
         } catch (error) {
@@ -104,11 +101,11 @@ class GenshinApi {
              `
                 <div>
                     <h1> ${characterJson.name}  </h1>
-                    <img src="${image}" alt="${characterJson.name} icon"/>
+                    <img src="${image}" alt="${characterJson.name} icon" class="character-card"/>
                     <h3> ${characterJson.nation} </h3>
-                    <h3> ${characterJson.rarity} </h3>
-                    <h3> ${characterJson.vision} </h3>
-                    <h3> ${characterJson.weapon} </h3>
+                    <h3> ${characterJson.rarity}-star </h3>
+                    <h3> ${characterJson.vision} ${characterJson.weapon} </h3>
+                    <h3> ${characterJson.description} </h3>
                 </div>
                 <br>
             `;
@@ -136,18 +133,3 @@ class GenshinApi {
 }
 
 const genshinApi = new GenshinApi();
-//document.addEventListener("DOMContentLoaded", genshinApi.getAllCharacters());
-if (typeof module === 'object') {
-    module.exports = {
-        getAllCharacters: genshinApi.getAllCharacters.bind(genshinApi),
-        showAllCharacters: genshinApi.showAllCharacters.bind(genshinApi),
-        getCharacterbyName: genshinApi.getCharacterbyName.bind(genshinApi),
-        loadCharacterIcon: genshinApi.loadCharacterIcon.bind(genshinApi),
-    }
-}
-/*
-module.exports = {
-    testAllChar: genshinApi.testAllChar.bind(genshinApi),
-    getCharacterbyName: genshinApi.getCharacterbyName.bind(genshinApi)
-};
-*/
